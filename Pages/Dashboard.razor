@@ -1,0 +1,72 @@
+@page "/"
+@using AequitasTracker.DTOs
+@using AequitasTracker.Services
+@inject CalculationService CalculationService
+@inject NavigationManager NavManager
+
+<PageTitle>Aequitas: Portfolio Dashboard</PageTitle>
+
+<h1>Aequitas: Real-Time Portfolio Engine</h1>
+<p>Dados atualizados pelo Cron Job do Hangfire.</p>
+
+<button class="btn btn-primary" @onclick="LoadPerformanceData">Atualizar Dados</button>
+
+@if (performanceData == null)
+{
+    <p><em>A carregar performance...</em></p>
+}
+else if (!performanceData.Any())
+{
+    <p>Não foram encontradas posições. <a href="/swagger" target="_blank">Registe uma posição primeiro (via Swagger).</a></p>
+}
+else
+{
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th>Qtd.</th>
+                <th>Preço Médio</th>
+                <th>Preço Atual</th>
+                <th>Valor de Mercado</th>
+                <th>P&L (Absoluto)</th>
+                <th>Performance Diária (%)</th>
+                <th>Exposição (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var asset in performanceData)
+            {
+                <tr>
+                    <td><strong>@asset.Ticker</strong></td>
+                    <td>@asset.Quantity.ToString("N0")</td>
+                    <td>@asset.AveragePrice.ToString("C2")</td>
+                    <td>@asset.CurrentPrice.ToString("C2")</td>
+                    <td>@asset.MarketValue.ToString("C2")</td>
+                    <td style="color: @(asset.ProfitAndLoss >= 0 ? "green" : "red")">
+                        @asset.ProfitAndLoss.ToString("C2")
+                    </td>
+                    <td style="color: @(asset.DailyPerformance >= 0 ? "green" : "red")">
+                        @asset.DailyPerformance.ToString("N2")%
+                    </td>
+                    <td>@asset.ExposurePercentage.ToString("N2")%</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<AssetPerformanceDTO>? performanceData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPerformanceData();
+    }
+
+    private async Task LoadPerformanceData()
+    {
+        // Chama o CalculationService para obter os dados calculados
+        performanceData = await CalculationService.CalculatePortfolioPerformanceAsync();
+    }
+}

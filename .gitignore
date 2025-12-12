@@ -1,0 +1,29 @@
+# .gitignore
+
+# Arquivos de Compilação e Configuração
+[Bb]in/
+[Oo]bj/
+*.log
+*.vspscc
+*.vssscc
+
+# Pacotes NuGet
+*.nupkg
+.nuget/
+
+# Ferramentas e IDEs
+.vs/
+.vscode/
+
+# Banco de Dados Local (SQLite)
+# Isto é crucial para não carregar a sua base de dados de desenvolvimento
+AequitasDB.db
+*.sqlite
+*.db
+
+# Migrações do EF Core (apenas se não quiser o histórico)
+# Mantenha este COMENTADO se quiser manter o histórico das Migrations
+# Migrations/
+
+# Teste Local
+TestResults/
