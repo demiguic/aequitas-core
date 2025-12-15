@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Hangfire;
-using Hangfire.InMemory;
 using AequitasTracker.Data;
 using AequitasTracker.Services;
 using AequitasTracker.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
+var apiKey = builder.Configuration["AlphaVantage:ApiKey"];
 
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
