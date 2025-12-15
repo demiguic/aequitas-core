@@ -6,6 +6,11 @@ namespace AequitasTracker.AlphaVantageModels
     {
         [JsonPropertyName("Global Quote")]
         public GlobalQuote? GlobalQuote { get; set; }
+        // ADICIONAR ESTA PROPRIEDADE PARA CAPTURAR A MENSAGEM DE ERRO/AVISO
+        [JsonPropertyName("Note")]
+        public string? Note { get; set; }
+        [JsonPropertyName("Information")]
+        public string? Information { get; set; }
     }
 
     public class GlobalQuote

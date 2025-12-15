@@ -55,6 +55,8 @@ namespace AequitasTracker.Jobs
                         Console.WriteLine($"Preço de {ticker} ({currentPrice.Value:C}) registado com sucesso.");
                     }
                 }
+                // API RATE LIMIT: ONE REQUEST PER MINUTE OR 25 PER DAY
+                await Task.Delay(TimeSpan.FromMilliseconds(1500));
             }
             await _dbContext.SaveChangesAsync();
         }

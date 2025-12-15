@@ -31,8 +31,14 @@ namespace AequitasTracker.Services
                 response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();
-
                 var quoteResponse = JsonSerializer.Deserialize<GlobalQuoteResponse>(json);
+
+                if (!string.IsNullOrEmpty(quoteResponse?.Note) || !string.IsNullOrEmpty(quoteResponse?.Information))
+                {
+                    var errorMessage = quoteResponse.Note ?? quoteResponse.Information;
+                    Console.WriteLine($"--- FALHA ALPHA VANTAGE (RATE LIMIT) --- Ticker: {ticker}. Mensagem: {errorMessage}");
+                    return null;
+                }
 
                 if (quoteResponse?.GlobalQuote?.Price != null)
                 {
@@ -42,7 +48,7 @@ namespace AequitasTracker.Services
                         System.Globalization.CultureInfo.InvariantCulture,
                         out var price))
                     {
-                        Console.WriteLine($"Preço do {ticker} obtido: {price:C2}"); 
+                        Console.WriteLine($"Preço do {ticker} obtido: {price:C2}");
                         return price;
                     }
                 }
